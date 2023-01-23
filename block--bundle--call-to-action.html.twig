@@ -32,14 +32,19 @@
 {% set alignment = (content.field_alignment.0) %}
 {% set body = (content.body) %}
 {% set button = 'btn btn-primary-' ~ color_button %}
+{% set fluid_image = (content.field_image.0['#item'].entity.uri.value) ? (file_url(content.field_image.0['#item'].entity.uri.value)) : '' %}
+{% set image_alt = (content.field_image.0['#item'].alt ) %}
+{% set image_path = (content.field_image['#items'].entity.uri.value) ? (file_url(content.field_image['#items'].entity.uri.value)) : '' %}
+{% set image_style = (content.field_image_style.0) %}
 {% set image = (content.field_image) %}
 {% set link = (content.field_link.0) %}
 {% set link_title = (content.field_link.0['#title']|render) %}
 {% set link_url = file_url(content.field_link.0['#url']|render) %}
+{% set remove_padding = (content.field_remove_padding.0) %}
 {% set text_alignment = (content.field_text_alignment.0) %}
 {% set text_color = 'gt-text-' ~ color_text %}
 {% set video = (content.field_video_url.0) %}
-{% set remove_padding = (content.field_remove_padding.0) %}
+
 
 {# Set Background Color #}
 {% if color_background is not empty %}
@@ -86,13 +91,17 @@
                 {% endif %}
                 {# Image with Link #}
                 {% if image is not empty and link is not empty %}
-                    <a title="{{ link_title }}" aria-labelledby="{{ link_title }}" href="{{ link_url }}">
-                        {{ image }}
+                    <a title="{{ link_title }}" aria-label="{{ link_title }}" href="{{ link_url }}">
+                        <div role="img" aria-label="{{ image_alt }}">
+                            <img class="{{ image_style }} card-img-top" src="{{ image_path }}" loading="lazy" alt="{{ image_alt }}">
+                        </div>
                     </a>
                 {% endif %}
                 {# Image without Link #}
                 {% if image is not empty and link is empty %}
-                    {{ image }}
+                    <div role="img" aria-label="{{ image_alt }}">
+                        <img class="{{ image_style }} card-img-top" src="{{ image_path }}" loading="lazy" alt="{{ image_alt }}">
+                    </div>
                 {% endif %}
             </div>
             {# Copy #}
@@ -110,7 +119,8 @@
             {# Link #}
             {% if link_title %}
                 <div class="card-footer w-100 mx-3 my-3">
-                    <a class="{{ button }}" title="{{ link_title }}" aria-labelledby="{{ link_title }}" href="{{ link_url }}">{{ link_title }}</a>
+                    <a class="{{ button }}" title="{{ link_title }}" aria-label="{{ link_title }}"
+                       href="{{ link_url }}">{{ link_title }}</a>
                 </div>
             {% else %}
             {% endif %}
